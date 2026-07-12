@@ -5,11 +5,11 @@ import heroImg from './assets/hero.png'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
-     <h1>Hello Yugesh</h1>
+     <h1>Hello World</h1>
      <p>i am asoftware developer</p>
     </>
   )
