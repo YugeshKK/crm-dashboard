@@ -1,11 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import styles from "./side.module.scss";
 
 type Props = {};
 
 const Sidebar = (props: Props) => {
   return (
-    <nav>
+    <nav className={styles.navCont}>
       <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
         Dashboard
       </NavLink>
