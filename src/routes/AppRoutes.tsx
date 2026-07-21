@@ -18,7 +18,8 @@ const AppRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="leads" element={<Leads />} />
-        <Route path="customers" element={<Customers />} />
+        <Route path="customers" element={<Customers />} />        
+        <Route path="practice" element={<Practice />} />
       </Route>
 
       //Auth Layout
@@ -28,7 +29,7 @@ const AppRoutes = () => {
 
       <Route element={<ProtectedRoutes />}>
         <Route path="products" element={<Products />} />
-        <Route path="practice" element={<Practice />} />
+
       </Route>
     </Routes>
   );
