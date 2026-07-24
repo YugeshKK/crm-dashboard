@@ -1,10 +1,14 @@
 import React from 'react'
+import Practice2 from './Practice2';
 
-type Props = {}
 
-const Practice = (props: Props) => {
+const Practice = () => {
+
   return (
-    <div>Practice</div>
+    <div>Practice
+      <p>Is Married</p>
+      <Practice2 name='Aadhiran' age={25} isMarried={false}/>
+    </div>
   )
 }
 
