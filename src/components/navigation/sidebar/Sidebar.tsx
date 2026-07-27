@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./side.module.scss";
+import { Menu, X } from "lucide-react";
 
 type Props = {};
 
 const Sidebar = (props: Props) => {
+  const [collapse, setCollapsed]= useState(false);
+
+  const handleCollapse=()=>{
+    setCollapsed((prev)=> !prev);
+  }
+
+  const navClasses = `${styles.navCont} cursor-pointer ${collapse ? styles.collapsed : ""}`.trim();
+
   return (
-    <nav className={styles.navCont}>
+    <div className={navClasses}> 
+      <div className={collapse ? styles.collapse : styles.unCollapsed} onClick={handleCollapse}>
+       { collapse ?  <Menu /> : <X/>}
+      </div>
+
+    <nav className={styles.navComp}>      
       <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
         Dashboard
       </NavLink>
@@ -33,8 +47,11 @@ const Sidebar = (props: Props) => {
         className={({ isActive }) => (isActive ? "active" : "")}
       >
         Practice
-      </NavLink>
+      </NavLink>    
+
     </nav>
+    </div>
+  
   );
 };
 

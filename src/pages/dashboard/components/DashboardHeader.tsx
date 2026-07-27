@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {  Plus } from "lucide-react"
+import { Plus } from "lucide-react";
 
 import {
   Select,
@@ -10,11 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export interface IAppProps {
-}
+export interface IAppProps {}
 
-export default function DashboardHeader (props: IAppProps) {
-      const handleClick = () => {
+export default function DashboardHeader(props: IAppProps) {
+  const handleClick = () => {
     console.log("Hello");
   };
   const items = [
@@ -25,7 +24,7 @@ export default function DashboardHeader (props: IAppProps) {
   ];
 
   return (
-      <div className="flex flex-col gap-2 flex-wrap p-3">
+    <div className="flex flex-col gap-2 flex-wrap p-2">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col gap-1">
           <h1 className="font-bold text-2xl">Dashboard</h1>
@@ -35,6 +34,10 @@ export default function DashboardHeader (props: IAppProps) {
           </p>
         </div>
         <div className="flex flex-row gap-4">
+          <Button variant={"secondary"}>
+            <Plus color="grey" />
+            Add Widget
+          </Button>
           <Select>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -51,8 +54,8 @@ export default function DashboardHeader (props: IAppProps) {
             </SelectContent>
           </Select>
           <Button variant={"secondary"} onClick={handleClick}>
-            <Plus color="grey"/>
-            Add Customer
+            <Plus color="grey" />
+            Add Lead
           </Button>
         </div>
       </div>

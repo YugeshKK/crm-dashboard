@@ -8,11 +8,11 @@ type Props = {};
 
 const MainLayout = (props: Props) => {
   return (
-    <div className="grid min-h-screen grid-cols-[280px_1fr] gap">
+    <div className="grid min-h-screen grid-cols-[auto_1fr] gap">
       <Sidebar />
       <div className="flex min-h-screen flex-col">
         <Header />
-        <main className="flex-1 p-4">
+        <main className="flex flex-col flex-1 gap-3 p-3">
           <Outlet />
         </main>
         <Footer />

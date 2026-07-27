@@ -54,21 +54,12 @@ export function DashboardKpiCard(props: IAppProps) {
       trend: "14 Apr-16 Dec",
       icon: "Truck",
     },
-    {
-      id: 6,
-      title: "Outstanding Payments",
-      value: 587000,
-      prefix: "₹",
-      change: -7.1,
-      trend: "down",
-      icon: "Receipt",
-    },
   ];
 
   return (
-    <div className="flex flex-row gap-3">
+    <div className="flex flex-wrap gap-3">
       {KPI_DATA?.map((card) => (
-        <Card key={card.id} className="flex-1 p-2">
+        <Card key={card.id} className="flex-1 min-w-[280px] p-2 max-w-50">
           <CardHeader className="flex gap-3">
             <CardTitle>{card.title}</CardTitle>
             <CardAction className="bg-green-200 p-2 rounded-lg w-20 text-center text-green-900 min-w-fit">
