@@ -4,7 +4,9 @@ type Props = {}
 
 const Header = (props: Props) => {
   return (
-    <div className={styles.headerCont}>Header</div>
+    <div className={styles.headerCont}>
+      <input className="flex items-center" placeholder="Search..." />
+    </div>
   )
 }
 

@@ -10,7 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export interface IAppProps {}
+export interface IAppProps {
+  addWidget: () => void;
+  isDialogOpen: boolean;
+  setIsDialogOpen: (open: boolean) => void;
+}
 
 export default function DashboardHeader(props: IAppProps) {
   const handleClick = () => {
@@ -34,7 +38,7 @@ export default function DashboardHeader(props: IAppProps) {
           </p>
         </div>
         <div className="flex flex-row gap-4">
-          <Button variant={"secondary"}>
+          <Button variant={"secondary"} onClick={props.addWidget}>
             <Plus color="grey" />
             Add Widget
           </Button>
