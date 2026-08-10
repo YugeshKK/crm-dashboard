@@ -27,48 +27,51 @@ type Props = {};
 
 type DashboardWidgetEntry = DashboardWidgetItem<JSX.Element>;
 
+const initialWidgets: DashboardWidgetEntry[] = [
+  {
+    id: "customer-map",
+    title: "Customer Map",
+    description: "View your customers on the map",
+    element: <CustomerMap />,
+  },
+  {
+    id: "revenue-trend",
+    title: "Revenue Trend",
+    description: "Track your revenue over time",
+    element: <RevenueTrendWidget />,
+  },
+  {
+    id: "top-products",
+    title: "Top Products",
+    description: "See your best performing products",
+    element: <TopProducts />,
+  },
+  {
+    id: "recent-orders",
+    title: "Recent Orders",
+    description: "Review your latest customer orders",
+    element: <RecentOrders />,
+  },
+  {
+    id: "monthly-targets",
+    title: "Monthly Targets",
+    description: "Monitor your monthly sales targets",
+    element: <MonthlyTargets />,
+  },
+  {
+    id: "sales-pipeline",
+    title: "Sales Pipeline",
+    description: "Track your sales opportunities",
+    element: <SalesPipeline />,
+  },
+];
+
 const Dashboard = (props: Props) => {
-  const [allWidgets] = useState<DashboardWidgetEntry[]>([
-    {
-      id: "customer-map",
-      title: "Customer Map",
-      description: "View your customers on the map",
-      element: <CustomerMap />,
-    },
-    {
-      id: "revenue-trend",
-      title: "Revenue Trend",
-      description: "Track your revenue over time",
-      element: <RevenueTrendWidget />,
-    },
-    {
-      id: "top-products",
-      title: "Top Products",
-      description: "See your best performing products",
-      element: <TopProducts />,
-    },
-    {
-      id: "recent-orders",
-      title: "Recent Orders",
-      description: "Review your latest customer orders",
-      element: <RecentOrders />,
-    },
-    {
-      id: "monthly-targets",
-      title: "Monthly Targets",
-      description: "Monitor your monthly sales targets",
-      element: <MonthlyTargets />,
-    },
-    {
-      id: "sales-pipeline",
-      title: "Sales Pipeline",
-      description: "Track your sales opportunities",
-      element: <SalesPipeline />,
-    },
-  ]);
+  const [allWidgets, setAllWidgets] = useState<DashboardWidgetEntry[]>(initialWidgets);
   const [widgets, setWidgets] = useState<DashboardWidgetEntry[]>([]);
   const [selectedWidgetIds, setSelectedWidgetIds] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchInp, setSearchInp] = useState("");
 
   const addWidget = () => {
     setSelectedWidgetIds([]);
@@ -98,6 +101,18 @@ const Dashboard = (props: Props) => {
     setIsDialogOpen(false);
   };
 
+  const handleSearchInp = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInp(value);
+    const query = value.toLowerCase().trim();
+
+    setAllWidgets(
+      initialWidgets.filter((widget) =>
+        widget.title.toLowerCase().trim().includes(query)
+      )
+    );
+  };
+
   return (
     <>
       <DashboardHeader
@@ -122,6 +137,8 @@ const Dashboard = (props: Props) => {
                 type="text"
                 placeholder="Search widgets"
                 className="border-0 p-0"
+                value={searchInp}
+                onChange={handleSearchInp}
                 style={{ width: "-webkit-fill-available" }}
               ></Input>
             </div>
