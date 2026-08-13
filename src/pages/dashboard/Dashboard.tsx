@@ -5,7 +5,7 @@ import {
   DashboardWidget,
   type DashboardWidgetItem,
 } from "./components/widgets/DashboardWidget";
-import RevenueTrendWidget from "./components/widgets/RevenueTrendWidget";
+import RevenueOverview from "./components/widgets/RevenueOverview";
 import {
   Dialog,
   DialogContent,
@@ -36,9 +36,9 @@ const initialWidgets: DashboardWidgetEntry[] = [
   },
   {
     id: "revenue-trend",
-    title: "Revenue Trend",
+    title: "Revenue Overview",
     description: "Track your revenue over time",
-    element: <RevenueTrendWidget />,
+    element: <RevenueOverview />,
   },
   {
     id: "top-products",

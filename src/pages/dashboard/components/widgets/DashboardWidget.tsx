@@ -15,7 +15,7 @@ export function DashboardWidget<TElement extends React.ReactNode = React.JSX.Ele
   return (
     <div className="flex flex-row gap-4 flex-wrap">
       {props.widgets.map((widget, index) => (
-        <div className="border border-gray-300 rounded shadow p-2" key={index}>
+        <div className="border border-gray-300 rounded-xl shadow p-3" key={index}>
           {widget.element}
         </div>
       ))}
