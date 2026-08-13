@@ -1,4 +1,8 @@
-export interface IRevenueOverviewProps {}
+export interface props {
+  onRemoveWidget?: (widgetId: string) => void;
+}
+
+
 import {
   Select,
   SelectContent,
@@ -18,8 +22,10 @@ import {
   Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ReactElement } from "react";
 
-export default function RevenueOverview(props: IRevenueOverviewProps) {
+export default function RevenueOverview(props: props) {
   return (
     <div className="revenue-widget-container flex flex-col gap-6 resize overflow-auto">
       <div className="w-header flex justify-between items-center">
@@ -41,9 +47,16 @@ export default function RevenueOverview(props: IRevenueOverviewProps) {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Button variant="outline">
-            <EllipsisVertical />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild> 
+              <Button variant="outline" size="icon" className="w-8 h-8 p-0">
+                <EllipsisVertical/>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <DropdownMenuItem onClick={()=> props.onRemoveWidget && props.onRemoveWidget('revenue-overview')}>Remove</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="flex items-center justify-between border-b-1 pb-4">

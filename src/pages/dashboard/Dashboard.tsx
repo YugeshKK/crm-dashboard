@@ -8,6 +8,7 @@ import {
 import RevenueOverview from "./components/widgets/RevenueOverview";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -25,49 +26,50 @@ import { Button } from "@/components/ui/button";
 
 type Props = {};
 
-type DashboardWidgetEntry = DashboardWidgetItem<JSX.Element>;
+type DashboardWidgetEntry = DashboardWidgetItem;
 
 const initialWidgets: DashboardWidgetEntry[] = [
   {
     id: "customer-map",
     title: "Customer Map",
     description: "View your customers on the map",
-    element: <CustomerMap />,
+    element: CustomerMap,
   },
   {
-    id: "revenue-trend",
+    id: "revenue-overview",
     title: "Revenue Overview",
     description: "Track your revenue over time",
-    element: <RevenueOverview />,
+    element: RevenueOverview,
   },
   {
     id: "top-products",
     title: "Top Products",
     description: "See your best performing products",
-    element: <TopProducts />,
+    element: TopProducts,
   },
   {
     id: "recent-orders",
     title: "Recent Orders",
     description: "Review your latest customer orders",
-    element: <RecentOrders />,
+    element: RecentOrders,
   },
   {
     id: "monthly-targets",
     title: "Monthly Targets",
     description: "Monitor your monthly sales targets",
-    element: <MonthlyTargets />,
+    element: MonthlyTargets,
   },
   {
     id: "sales-pipeline",
     title: "Sales Pipeline",
     description: "Track your sales opportunities",
-    element: <SalesPipeline />,
+    element: SalesPipeline,
   },
 ];
 
 const Dashboard = (props: Props) => {
-  const [allWidgets, setAllWidgets] = useState<DashboardWidgetEntry[]>(initialWidgets);
+  const [allWidgets, setAllWidgets] =
+    useState<DashboardWidgetEntry[]>(initialWidgets);
   const [widgets, setWidgets] = useState<DashboardWidgetEntry[]>([]);
   const [selectedWidgetIds, setSelectedWidgetIds] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -75,6 +77,8 @@ const Dashboard = (props: Props) => {
 
   const addWidget = () => {
     setSelectedWidgetIds([]);
+    setSearchInp("");
+    setAllWidgets(initialWidgets);
     setIsDialogOpen(true);
   };
 
@@ -82,7 +86,7 @@ const Dashboard = (props: Props) => {
     setSelectedWidgetIds((prev) =>
       prev.includes(widgetId)
         ? prev.filter((id) => id !== widgetId)
-        : [...prev, widgetId]
+        : [...prev, widgetId],
     );
   };
 
@@ -90,7 +94,7 @@ const Dashboard = (props: Props) => {
     const newWidgets = allWidgets.filter(
       (widget) =>
         selectedWidgetIds.includes(widget.id) &&
-        !widgets.some((existingWidget) => existingWidget.id === widget.id)
+        !widgets.some((existingWidget) => existingWidget.id === widget.id),
     );
 
     if (newWidgets.length > 0) {
@@ -103,13 +107,18 @@ const Dashboard = (props: Props) => {
 
   const handleSearchInp = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchInp(value);
     const query = value.toLowerCase().trim();
-
+    setSearchInp(value);
     setAllWidgets(
       initialWidgets.filter((widget) =>
-        widget.title.toLowerCase().trim().includes(query)
-      )
+        widget.title.toLowerCase().trim().includes(query),
+      ),
+    );
+  };
+
+  const handleRemoveWidget = (widgetId: string) => {
+    setWidgets((prevWidgets) =>
+      prevWidgets.filter((widget) => widget.id !== widgetId),
     );
   };
 
@@ -121,7 +130,7 @@ const Dashboard = (props: Props) => {
         setIsDialogOpen={setIsDialogOpen}
       />
       <DashboardKpiCard />
-      <DashboardWidget widgets={widgets} />
+      <DashboardWidget widgets={widgets} onRemoveWidget={handleRemoveWidget} />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="">
@@ -156,20 +165,20 @@ const Dashboard = (props: Props) => {
                     }`}
                     onClick={() => toggleWidgetSelection(widget.id)}
                   >
-                  <ShoppingCart
-                    color="purple"
-                    height={50}
-                    width={70}
-                    style={{
-                      backgroundColor: "#ee9dee68",
-                      borderRadius: "10px",
-                      padding: "0.4rem 0.6rem",
-                    }}
-                  />
-                  <div>
-                    <p>{widget.title}</p>
-                    <p>{widget.description}</p>
-                  </div>
+                    <ShoppingCart
+                      color="purple"
+                      height={50}
+                      width={70}
+                      style={{
+                        backgroundColor: "#ee9dee68",
+                        borderRadius: "10px",
+                        padding: "0.4rem 0.6rem",
+                      }}
+                    />
+                    <div>
+                      <p>{widget.title}</p>
+                      <p>{widget.description}</p>
+                    </div>
                     <Button
                       style={{
                         background: isSelected ? "#c084fc" : "#4a434438",
@@ -182,7 +191,7 @@ const Dashboard = (props: Props) => {
               })}
             </div>
           </DialogHeader>
-          <DialogFooter showCloseButton>
+            <DialogFooter>
             <Button
               onClick={handleAddSelectedWidgets}
               disabled={selectedWidgetIds.length === 0}
@@ -192,6 +201,15 @@ const Dashboard = (props: Props) => {
             >
               Add Widget
             </Button>
+            <DialogClose
+              asChild
+                onClick={() => {
+                  setSearchInp("");
+                  setAllWidgets(initialWidgets);
+                }}
+            >
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
