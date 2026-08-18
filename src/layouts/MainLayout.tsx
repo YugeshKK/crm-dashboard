@@ -10,9 +10,9 @@ const MainLayout = (props: Props) => {
   return (
     <div className="grid min-h-screen grid-cols-[auto_1fr] gap">
       <Sidebar />
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col min-w-0">
         <Header />
-        <main className="flex flex-col flex-1 gap-3 p-3">
+        <main className="flex flex-col min-w-0 flex-1 gap-3 p-3">
           <Outlet />
         </main>
         <Footer />

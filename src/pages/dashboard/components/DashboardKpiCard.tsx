@@ -8,10 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Wallet } from 'lucide-react';
-export interface IAppProps {}
+import { ChevronLeftCircle, ChevronRight, ChevronRightCircle, Wallet } from 'lucide-react';  
+import useEmblaCarousel from 'embla-carousel-react';
+import styles from './DashboardKpi.scss';
 
+export interface IAppProps {}
 export function DashboardKpiCard(props: IAppProps) {
+
   const KPI_DATA = [
     {
       id: 1,
@@ -55,30 +58,69 @@ export function DashboardKpiCard(props: IAppProps) {
       icon: "Truck",
     },
   ];
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    duration: 20,
+  })
+
+const scrollPrev = () => emblaApi?.scrollPrev()
+
+const scrollNext = () => emblaApi?.scrollNext()
 
   return (
-    <div className="flex flex-wrap gap-3">
-      {KPI_DATA?.map((card) => (
-        <Card key={card.id} className="flex-1 min-w-[280px] p-2 max-w-50">
-          <CardHeader className="flex gap-3">
-            <CardTitle>{card.title}</CardTitle>
-            <CardAction className="bg-green-200 p-2 rounded-lg w-20 text-center text-green-900 min-w-fit">
-              {card.change} %
-            </CardAction>
-          </CardHeader>
-          <div className="flex justify-around">
-            <div className="self-start w-full">
-              <CardContent>
-                <p className="font-bold">
-                  {card.prefix} {card.value}
-                </p>
-              </CardContent>
-              <CardDescription>{card.trend}</CardDescription>
-            </div>
-            <Wallet color="purple"/>
-          </div>
-        </Card>
-      ))}
+  <div className="relative w-full">
+      {/* Viewport */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        {/* Container */}
+        <div className="flex gap-4 p-2">
+          {KPI_DATA.map((card) => (
+            <Card
+              key={card.id}
+              className="w-[280px] shrink-0 p-2"
+            >
+              <CardHeader className="flex gap-3">
+                <CardTitle>{card.title}</CardTitle>
+
+                <CardAction className="min-w-fit w-20 rounded-lg bg-green-200 p-2 text-center text-green-900">
+                  {card.change}%
+                </CardAction>
+              </CardHeader>
+
+              <div className="flex justify-around">
+                <div className="w-full self-start">
+                  <CardContent>
+                    <p className="font-bold">
+                      {card.prefix} {card.value}
+                    </p>
+                  </CardContent>
+
+                  <CardDescription>
+                    {card.trend}
+                  </CardDescription>
+                </div>
+
+                <Wallet />
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <button
+        onClick={scrollPrev}
+        className="absolute top-1/2 left-2 -translate-y-1/2"
+      >
+        <ChevronLeftCircle  className="cursor-pointer" />
+      </button>
+
+      <button
+        onClick={scrollNext}
+        className="absolute top-1/2 right-2 -translate-y-1/2"
+      >
+        <ChevronRightCircle className="cursor-pointer" />
+      </button>
     </div>
-  );
+  );        
+ 
 }
