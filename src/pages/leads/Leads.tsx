@@ -14,6 +14,10 @@ import { Button } from "@/components/ui/button";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable, StatusBadge } from "../../components/ui/table/DataTable";
+import { LeadInfoModal } from "./modals/leadInfoModal";
+
+
+
 
 // --- Types ---
 type Person = {
@@ -67,7 +71,7 @@ const generateDummyData = (): Person[] => {
 };
 
 // --- Column Definitions ---
-const columnHelper = createColumnHelper<any>();
+const columnHelper = createColumnHelper<any, any>();
 
 const createColumns = () => {
   // Get initials for avatar
@@ -85,6 +89,7 @@ const createColumns = () => {
           checked={table.getIsAllRowsSelected()}
           onChange={table.getToggleAllRowsSelectedHandler()}
           className="cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
         />
       ),
       cell: ({ row }) => (
@@ -93,6 +98,7 @@ const createColumns = () => {
           checked={row.getIsSelected()}
           onChange={row.getToggleSelectedHandler()}
           className="cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
         />
       ),
     }),
@@ -103,15 +109,14 @@ const createColumns = () => {
       header: "Lead",
       cell: (info) => {
         const firstName = info.getValue();
-        const lastName = info.row.original.lastName;
-        const initials = getInitials(firstName, lastName);
+        const initials = getInitials(firstName," ");
         return (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-600">
               {initials}
             </div>
             <div>
-              <div className="font-medium text-sm">{firstName} {lastName}</div>
+              <div className="font-medium text-sm">{firstName}</div>
               <div className="text-xs text-gray-500">{info.row.original.email || `${firstName.toLowerCase()}@email.com`}</div>
             </div>
           </div>
@@ -192,7 +197,9 @@ const createColumns = () => {
       id: "actions",
       header: "Actions",
       cell: () => (
-        <button className="text-gray-400 hover:text-gray-600">
+        <button className="text-gray-400 hover:text-gray-600 cursor-pointer"
+        onClick={(e)=> e.stopPropagation()}
+        >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
           </svg>
@@ -203,10 +210,13 @@ const createColumns = () => {
 };
 
 // --- Main Leads Component ---
-const Leads: React.FC = () => {
-  const [data] = useState<Person[]>(generateDummyData);
+const Leads: React.FC = () => { 
+   
+  const [data, setData] = useState<Person[]>(generateDummyData);
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSort, setActiveSort] = useState("newest");
+  const [isLeadInfoOpen, setIsLeadInfoOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Person>();
 
   // Filter tabs with counts
   const filterTabs = useMemo(() => {
@@ -225,18 +235,28 @@ const Leads: React.FC = () => {
     ];
   }, [data]);
 
-  // Sort options
-  const sortOptions = [
-    { label: "Newest", value: "newest" },
-    { label: "Oldest", value: "oldest" },
-    { label: "A-Z", value: "az" },
-    { label: "Z-A", value: "za" },
-  ];
+// Handler for status change
+    const handleStatusChange = (row: Person, newStatus: string) => {
+    setData(prev =>
+      prev.map(item =>
+        item.id === row.id ? { ...item, status: newStatus as Person['status'] } : item
+      )
+    );
+  };
+
 
   // View options
   const viewOptions = [
     { label: "Table", value: "table", icon: <TableIcon className="w-4 h-4" /> },
     { label: "Grid", value: "grid", icon: <LayoutGrid className="w-4 h-4" /> },
+  ];
+
+  const statusOptions = [
+    { value: 'new', label: 'New', color: 'bg-blue-500' },
+    { value: 'contacted', label: 'Contacted', color: 'bg-purple-500' },
+    { value: 'qualified', label: 'Qualified', color: 'bg-indigo-500' },
+    { value: 'converted', label: 'Converted', color: 'bg-green-500' },
+    { value: 'lost', label: 'Lost', color: 'bg-red-500' },
   ];
 
   // Filter data based on active filter
@@ -246,29 +266,46 @@ const Leads: React.FC = () => {
   }, [data, activeFilter]);
 
   // Sort data based on active sort
-  const sortedData = useMemo(() => {
-    const sorted = [...filteredData];
-    switch (activeSort) {
-      case "newest":
-        return sorted.sort((a, b) => {
-          const aNum = parseInt(a.created);
-          const bNum = parseInt(b.created);
-          return bNum - aNum;
-        });
-      case "oldest":
-        return sorted.sort((a, b) => {
-          const aNum = parseInt(a.created);
-          const bNum = parseInt(b.created);
-          return aNum - bNum;
-        });
-      case "az":
-        return sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
-      case "za":
-        return sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
-      default:
-        return sorted;
-    }
-  }, [filteredData, activeSort]);
+const sortedData = useMemo(() => {
+  const sorted = [...filteredData];
+
+  switch (activeSort) {
+    case 'newest':
+      // Sort by created date (assumes format like "2d ago", "5h ago", etc.)
+      // We'll parse the number before 'd' or 'h' and convert to days/hours for comparison
+      return sorted.sort((a, b) => {
+        const getDays = (str: string) => {
+          const match = str.match(/(\d+)([dh])/);
+          if (!match) return 0;
+          const num = parseInt(match[1]);
+          const unit = match[2];
+          return unit === 'd' ? num : num / 24; // convert hours to days
+        };
+        return getDays(b.created) - getDays(a.created);
+      });
+
+    case 'oldest':
+      return sorted.sort((a, b) => {
+        const getDays = (str: string) => {
+          const match = str.match(/(\d+)([dh])/);
+          if (!match) return 0;
+          const num = parseInt(match[1]);
+          const unit = match[2];
+          return unit === 'd' ? num : num / 24;
+        };
+        return getDays(a.created) - getDays(b.created);
+      });
+
+    case 'az':
+      return sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+    case 'za':
+      return sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
+
+    default:
+      return sorted;
+  }
+}, [filteredData, activeSort]);
 
   // Lead cards data
   const leadCards = [
@@ -279,6 +316,7 @@ const Leads: React.FC = () => {
     { title: "Converted", value: 22, icon: <Target />, change: "+10%", changeText: "vs last month" },
   ];
 
+  
   // Bulk actions
   const bulkActions = [
     {
@@ -304,10 +342,13 @@ const Leads: React.FC = () => {
     },
   ];
 
-  // Handlers
-  const handleRowDoubleClick = (row: Person) => {
-    console.log("Row double-clicked:", row);
+  // Row click Handler
+  const handleRowClick = (row: Person) => {
+    setIsLeadInfoOpen(true);
+    setSelectedLead(row);
+    console.log(isLeadInfoOpen)
   };
+
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -320,7 +361,9 @@ const Leads: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button>
+          <Button
+          variant="outline"
+          >
             <PlusIcon className="w-4 h-4" />
             Add Lead
           </Button>
@@ -361,7 +404,7 @@ const Leads: React.FC = () => {
         searchPlaceholder="Search leads, name, email or phone..."
         pageSizeOptions={[10, 25, 50, 100]}
         defaultPageSize={10}
-        onRowDoubleClick={handleRowDoubleClick}
+        onRowClick={handleRowClick}
         bulkActions={bulkActions}
         enableSelection={true}
         enableSorting={true}
@@ -370,12 +413,18 @@ const Leads: React.FC = () => {
         filterTabs={filterTabs}
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
-        sortOptions={sortOptions}
         activeSort={activeSort}
         onSortChange={setActiveSort}
         viewOptions={viewOptions}
         activeView="table"
         onViewChange={(view) => console.log("View changed to:", view)}
+        onStatusChange={handleStatusChange}
+        statusOptions={statusOptions}
+      />
+      <LeadInfoModal
+        isLeadInfoOpen={isLeadInfoOpen}
+        setIsLeadInfoOpen={setIsLeadInfoOpen}
+        leadData={selectedLead}
       />
     </div>
   );

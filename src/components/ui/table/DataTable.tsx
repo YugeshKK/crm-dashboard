@@ -1,7 +1,7 @@
 // ============================================
 // 1. IMPORTS
 // ============================================
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   useTable,
   tableFeatures,
@@ -22,6 +22,13 @@ import {
   // Utilities
   flexRender,
 } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 // ============================================
 // 2. TYPES
@@ -45,34 +52,36 @@ export type DataTableProps<TData> = {
   searchPlaceholder?: string;
   pageSizeOptions?: number[];
   defaultPageSize?: number;
-  onRowDoubleClick?: (row: TData) => void;
   onRowClick?: (row: TData) => void;
   bulkActions?: {
     label: string;
     onClick: (selectedRows: TData[]) => void;
     variant?: "default" | "destructive" | "success";
   }[];
-  
+
   // New props for table controls
   enableSelection?: boolean;
   enableSorting?: boolean;
   enableFiltering?: boolean;
   enablePagination?: boolean;
-  
+
   // Filter tabs (like All, New, Contacted, etc.)
   filterTabs?: FilterOption[];
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
-  
+
   // Sort options
   sortOptions?: SortOption[];
   activeSort?: string;
   onSortChange?: (sort: string) => void;
-  
+
   // View options
   viewOptions?: { label: string; value: string; icon?: React.ReactNode }[];
   activeView?: string;
   onViewChange?: (view: string) => void;
+  onStatusChange?: (row: TData, newStatus: string) => void;
+  statusOptions: Record<string, string>[];
+  statusKey?: string;
 };
 
 // ============================================
@@ -112,14 +121,13 @@ export function DataTable<TData extends Record<string, any>>({
   searchPlaceholder = "Search leads, name, email or phone...",
   pageSizeOptions = [5, 10, 20, 30, 50],
   defaultPageSize = 10,
-  onRowDoubleClick,
   onRowClick,
   bulkActions = [],
   enableSelection = true,
   enableSorting = true,
   enableFiltering = true,
   enablePagination = true,
-  
+
   // Table controls
   filterTabs = [],
   activeFilter = "all",
@@ -130,6 +138,9 @@ export function DataTable<TData extends Record<string, any>>({
   viewOptions = [],
   activeView = "",
   onViewChange,
+  onStatusChange,
+  statusOptions,
+  statusKey = "status",
 }: DataTableProps<TData>) {
   // State
   const [globalFilter, setGlobalFilter] = useState("");
@@ -153,10 +164,55 @@ export function DataTable<TData extends Record<string, any>>({
       : undefined,
   });
 
+  const processedColumns = useMemo(() => {
+    if (!onStatusChange) return columns;
+    return columns.map((col) => {
+      if (col.id === 'status' || col.accessorKey === 'status') {
+        return {
+          ...col,
+          cell: (info: any) => {
+            const currentStatus = info.getValue();
+            const row = info.row.original;
+            const currentOption = statusOptions.find(opt => opt.value === currentStatus) || statusOptions[0];
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={`flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors w-[120px] ${currentOption.color} ${currentOption.textColor || 'text-white'}`}
+                    onClick={(e) => e.stopPropagation()} // <-- stop row click
+                  >
+                    {currentOption.label}
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="min-w-[140px] rounded-lg shadow-lg border">
+                  {statusOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={(e) => {
+                        e.stopPropagation(); // <-- stop row click
+                        onStatusChange(row, option.value);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-gray-100"
+                    >
+                      <span className={`w-2.5 h-2.5 rounded-full ${option.color}`} />
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          }
+        };
+      }
+      return col;
+    });
+  }, [columns, onStatusChange, statusOptions]);
+
   // Table instance
   const table = useTable({
     features,
-    columns,
+    columns: processedColumns,
     data,
     state: {
       ...(enableFiltering && { globalFilter }),
@@ -176,24 +232,21 @@ export function DataTable<TData extends Record<string, any>>({
   // Get selected rows
   const selectedRowIds = Object.keys(rowSelection);
   const selectedRows = selectedRowIds
-    .map((id) => table.getRowModel().rows.find((row) => row.id === id)?.original)
+    .map(
+      (id) => table.getRowModel().rows.find((row) => row.id === id)?.original,
+    )
     .filter(Boolean) as TData[];
 
   // Handlers
-  const handleRowDoubleClick = (row: any) => {
-    if (onRowDoubleClick) {
-      onRowDoubleClick(row.original);
-    }
-  };
-
   const handleRowClick = (row: any) => {
     if (onRowClick) {
       onRowClick(row.original);
     }
   };
 
+
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="p-4 max-w-8xl">
       {/* Header with Search and Actions */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div>
@@ -223,26 +276,6 @@ export function DataTable<TData extends Record<string, any>>({
               />
             </svg>
           </div>
-
-          {/* View Options (Grid/Table view) */}
-          {viewOptions.length > 0 && (
-            <div className="flex border rounded-lg overflow-hidden">
-              {viewOptions.map((view) => (
-                <button
-                  key={view.value}
-                  onClick={() => onViewChange?.(view.value)}
-                  className={`px-3 py-2 text-sm flex items-center gap-1 ${
-                    activeView === view.value
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  {view.icon}
-                  {view.label}
-                </button>
-              ))}
-            </div>
-          )}
 
           {enableSelection && selectedRowIds.length > 0 && (
             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium">
@@ -285,23 +318,6 @@ export function DataTable<TData extends Record<string, any>>({
             </div>
           )}
 
-          {/* Sort Options */}
-          {sortOptions.length > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Sort:</span>
-              <select
-                value={activeSort}
-                onChange={(e) => onSortChange?.(e.target.value)}
-                className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
         </div>
       )}
 
@@ -320,7 +336,7 @@ export function DataTable<TData extends Record<string, any>>({
                       <div className="flex flex-col gap-1">
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {enableFiltering && header.column.getCanFilter() && (
                           <input
@@ -351,9 +367,8 @@ export function DataTable<TData extends Record<string, any>>({
                   key={row.id}
                   className={`hover:bg-gray-50 transition-colors ${
                     enableSelection && row.getIsSelected() ? "bg-blue-50" : ""
-                  } ${onRowClick || onRowDoubleClick ? "cursor-pointer" : ""}`}
+                  } ${onRowClick || onRowClick ? "cursor-pointer" : ""}`}
                   onClick={() => handleRowClick(row)}
-                  onDoubleClick={() => handleRowDoubleClick(row)}
                 >
                   {row.getAllCells().map((cell) => (
                     <td
@@ -362,7 +377,7 @@ export function DataTable<TData extends Record<string, any>>({
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   ))}
@@ -444,31 +459,33 @@ export function DataTable<TData extends Record<string, any>>({
       )}
 
       {/* Bulk Actions */}
-      {enableSelection && selectedRowIds.length > 0 && bulkActions.length > 0 && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200 flex flex-wrap items-center gap-3">
-          <span className="text-sm font-medium text-gray-700">
-            {selectedRowIds.length} rows selected
-          </span>
-          {bulkActions.map((action, index) => {
-            const variantStyles = {
-              default: "bg-blue-500 hover:bg-blue-600",
-              destructive: "bg-red-500 hover:bg-red-600",
-              success: "bg-green-500 hover:bg-green-600",
-            };
-            return (
-              <button
-                key={index}
-                onClick={() => action.onClick(selectedRows)}
-                className={`px-3 py-1 text-sm text-white rounded transition ${
-                  variantStyles[action.variant || "default"]
-                }`}
-              >
-                {action.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      {enableSelection &&
+        selectedRowIds.length > 0 &&
+        bulkActions.length > 0 && (
+          <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200 flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium text-gray-700">
+              {selectedRowIds.length} rows selected
+            </span>
+            {bulkActions.map((action, index) => {
+              const variantStyles = {
+                default: "bg-blue-500 hover:bg-blue-600",
+                destructive: "bg-red-500 hover:bg-red-600",
+                success: "bg-green-500 hover:bg-green-600",
+              };
+              return (
+                <button
+                  key={index}
+                  onClick={() => action.onClick(selectedRows)}
+                  className={`px-3 py-1 text-sm text-white rounded transition ${
+                    variantStyles[action.variant || "default"]
+                  }`}
+                >
+                  {action.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
     </div>
   );
 }
