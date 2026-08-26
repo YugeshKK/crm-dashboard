@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable, StatusBadge } from "../../components/ui/table/DataTable";
-import { LeadInfoModal } from "./modals/leadInfoModal";
+import { LeadInfoModal } from "./modals/LeadInfoModal";
+import AddLeadModal from "./modals/AddLeadModal";
 
 
 
@@ -217,6 +218,7 @@ const Leads: React.FC = () => {
   const [activeSort, setActiveSort] = useState("newest");
   const [isLeadInfoOpen, setIsLeadInfoOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Person>();
+  const [isAddLeadOpen, setIsAddLeadOpen]= useState(false);
 
   // Filter tabs with counts
   const filterTabs = useMemo(() => {
@@ -349,6 +351,10 @@ const sortedData = useMemo(() => {
     console.log(isLeadInfoOpen)
   };
 
+  const handleAddLead=()=>{
+    setIsAddLeadOpen(true);
+  }
+
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -363,6 +369,7 @@ const sortedData = useMemo(() => {
         <div className="flex gap-3">
           <Button
           variant="outline"
+          onClick={handleAddLead}
           >
             <PlusIcon className="w-4 h-4" />
             Add Lead
@@ -425,6 +432,10 @@ const sortedData = useMemo(() => {
         isLeadInfoOpen={isLeadInfoOpen}
         setIsLeadInfoOpen={setIsLeadInfoOpen}
         leadData={selectedLead}
+      />
+      <AddLeadModal
+      isAddLeadOpen={isAddLeadOpen}
+      setisAddLeadOpen={setIsAddLeadOpen}
       />
     </div>
   );
