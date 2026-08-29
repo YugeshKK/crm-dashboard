@@ -318,7 +318,6 @@ const sortedData = useMemo(() => {
     { title: "Converted", value: 22, icon: <Target />, change: "+10%", changeText: "vs last month" },
   ];
 
-  
   // Bulk actions
   const bulkActions = [
     {
@@ -355,6 +354,7 @@ const sortedData = useMemo(() => {
     setIsAddLeadOpen(true);
   }
 
+  console.log(filteredData, 'filter')
 
   return (
     <div className="flex flex-col gap-4 p-4">
