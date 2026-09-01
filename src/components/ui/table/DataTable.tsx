@@ -322,15 +322,20 @@ export function DataTable<TData extends Record<string, any>>({
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto border border-gray-200">
+      <div className="rounded-lg shadow overflow-x-auto border" style={{ backgroundColor: "var(--background)", borderColor: "var(--border)" }}>
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50" style={{ backgroundColor: "var(--background)" }}>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <tr key={headerGroup.id}
+                style={
+                  {borderColor: "var(--border)"}
+                }
+              >
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                    style={{ color: "var(--text-color)" }}
                   >
                     {header.isPlaceholder ? null : (
                       <div className="flex flex-col gap-1">
@@ -348,7 +353,8 @@ export function DataTable<TData extends Record<string, any>>({
                               header.column.setFilterValue(e.target.value);
                             }}
                             placeholder={`Filter...`}
-                            className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            style={{ color: "var(--text-color)", borderColor: "var(--border)" }}
+                            className="w-full px-2 py-1 text-xs border border-gray-300 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                             onClick={(e) => e.stopPropagation()}
                           />
                         )}
@@ -360,20 +366,27 @@ export function DataTable<TData extends Record<string, any>>({
             ))}
           </thead>
 
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-200" style={{ backgroundColor: "var(--background)" }}>
             {pageRows.length > 0 ? (
               pageRows.map((row) => (
                 <tr
                   key={row.id}
-                  className={`hover:bg-gray-50 transition-colors ${
+                  className={`transition-colors ${
                     enableSelection && row.getIsSelected() ? "bg-blue-50" : ""
                   } ${onRowClick || onRowClick ? "cursor-pointer" : ""}`}
                   onClick={() => handleRowClick(row)}
+                  style={{
+                    backgroundColor: row.getIsSelected()
+                      ? "var(--selected-row-bg)"
+                      : "var(--background)",
+                    borderColor: "var(--border)",
+                  }}
                 >
                   {row.getAllCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
+                      className="px-4 py-3 whitespace-nowrap text-sm" 
+                      style={{ color: "var(--text-color)" }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -463,7 +476,9 @@ export function DataTable<TData extends Record<string, any>>({
         selectedRowIds.length > 0 &&
         bulkActions.length > 0 && (
           <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200 flex flex-wrap items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium"
+            style={{ color: "var(--text-color)" }}
+            >
               {selectedRowIds.length} rows selected
             </span>
             {bulkActions.map((action, index) => {

@@ -44,7 +44,7 @@ export function LeadInfoModal({
     <Sheet open={isLeadInfoOpen} onOpenChange={setIsLeadInfoOpen}>
       <SheetContent
         side="right"
-        className="w-[420px] sm:w-[480px] p-0 overflow-y-auto bg-white"
+        className="w-[420px] sm:w-[480px] p-0 overflow-y-auto "
       >
         {/* Close button */}
         <SheetClose className="absolute right-4 top-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"></SheetClose>
@@ -59,8 +59,8 @@ export function LeadInfoModal({
               <h2 className="text-xl font-bold truncate">
                 {leadData.firstName} {leadData.lastName}
               </h2>
-              <p className="text-sm text-gray-500 truncate">{leadData.company}</p>
-              <p className="text-sm text-gray-500 truncate">{leadData.phone}</p>
+              <p className="text-sm  truncate">{leadData.company}</p>
+              <p className="text-sm  truncate">{leadData.phone}</p>
             </div>
           </div>
         </div>
@@ -69,37 +69,37 @@ export function LeadInfoModal({
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-500 uppercase">Status</p>
+              <p className="text-xs  uppercase">Status</p>
               <StatusBadge status={leadData.status} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Source</p>
+              <p className="text-xs  uppercase">Source</p>
               <p className="text-sm">{leadData.source || '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Owner</p>
+              <p className="text-xs  uppercase">Owner</p>
               <p className="text-sm">{leadData.owner || '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Created</p>
+              <p className="text-xs  uppercase">Created</p>
               <p className="text-sm">{leadData.created || '—'}</p>
             </div>
             {/* Optional fields – show only if they exist */}
             {leadData.email && (
               <div className="col-span-2">
-                <p className="text-xs text-gray-500 uppercase">Email</p>
+                <p className="text-xs  uppercase">Email</p>
                 <p className="text-sm">{leadData.email}</p>
               </div>
             )}
             {leadData.leadScore !== undefined && (
               <div>
-                <p className="text-xs text-gray-500 uppercase">Lead Score</p>
+                <p className="text-xs  uppercase">Lead Score</p>
                 <p className="text-sm font-medium">{leadData.leadScore}/100</p>
               </div>
             )}
             {leadData.expectedValue !== undefined && (
               <div>
-                <p className="text-xs text-gray-500 uppercase">Expected Value</p>
+                <p className="text-xs  uppercase">Expected Value</p>
                 <p className="text-sm font-medium">₹ {leadData.expectedValue.toLocaleString()}</p>
               </div>
             )}
@@ -121,7 +121,7 @@ export function LeadInfoModal({
           </div>
           <div className="p-6">
             {/* Overview content */}
-            <div className="space-y-2 text-sm text-gray-700">
+            <div className="space-y-2 text-sm">
               <p><strong>Contact:</strong> {leadData.firstName} {leadData.lastName}</p>
               <p><strong>Company:</strong> {leadData.company}</p>
               <p><strong>Phone:</strong> {leadData.phone}</p>

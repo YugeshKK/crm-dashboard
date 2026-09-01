@@ -10,24 +10,28 @@ import {
   LayoutGrid,
   Table as TableIcon,
 } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable, StatusBadge } from "../../components/ui/table/DataTable";
 import { LeadInfoModal } from "./modals/LeadInfoModal";
-import AddLeadModal from "./modals/AddLeadModal";
-
-
-
+import AddLeadModal, { LeadFormData } from "./modals/AddLeadModal";
 
 // --- Types ---
 type Person = {
   id: string;
   firstName: string;
   lastName: string;
-  age: number;
   address: string;
   phone: string;
+  email: string;
   status: "new" | "contacted" | "qualified" | "converted" | "lost";
   company: string;
   source: string;
@@ -35,25 +39,68 @@ type Person = {
   created: string;
 };
 
+// --- Helpers ---
+const formatDateToMMDDYYYY = (date: Date = new Date()) => {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(date);
+};
+
 // --- Generate Dummy Data ---
 const generateDummyData = (): Person[] => {
   const firstNames = [
-    "Rohan", "Priya", "Amit", "Neha", "Deepak", 
-    "Vishal", "Anjali", "Arjun", "Sneha", "Raj"
+    "Rohan",
+    "Priya",
+    "Amit",
+    "Neha",
+    "Deepak",
+    "Vishal",
+    "Anjali",
+    "Arjun",
+    "Sneha",
+    "Raj",
   ];
   const lastNames = [
-    "Kumar", "Singh", "Mehta", "Sharma", "Gupta",
-    "Patel", "Shah", "Verma", "Reddy", "Joshi"
+    "Kumar",
+    "Singh",
+    "Mehta",
+    "Sharma",
+    "Gupta",
+    "Patel",
+    "Shah",
+    "Verma",
+    "Reddy",
+    "Joshi",
   ];
   const companies = [
-    "RK Solutions", "Elite Corp", "Zylker Pvt Ltd", 
-    "Neha Enterprise", "DG Infotech", "SoftTech Solutions",
-    "Shah Traders", "Patel Group", "Verma Industries", "Joshi & Co"
+    "RK Solutions",
+    "Elite Corp",
+    "Zylker Pvt Ltd",
+    "Neha Enterprise",
+    "DG Infotech",
+    "SoftTech Solutions",
+    "Shah Traders",
+    "Patel Group",
+    "Verma Industries",
+    "Joshi & Co",
   ];
-  const sources = ["Website", "Referral", "LinkedIn", "Exhibition", "Cold Call", "Advertisement"];
+  const sources = [
+    "Website",
+    "Referral",
+    "LinkedIn",
+    "Exhibition",
+    "Cold Call",
+    "Advertisement",
+  ];
   const owners = ["Admin", "John Doe", "Jane Smith", "Mike Johnson"];
   const statuses: Person["status"][] = [
-    "new", "contacted", "qualified", "converted", "lost"
+    "new",
+    "contacted",
+    "qualified",
+    "converted",
+    "lost",
   ];
 
   return Array.from({ length: 128 }, (_, i) => ({
@@ -63,6 +110,7 @@ const generateDummyData = (): Person[] => {
     age: Math.floor(Math.random() * 50) + 18,
     address: `${Math.floor(Math.random() * 1000)} Main St, City`,
     phone: `+91${Math.floor(Math.random() * 9000000000) + 1000000000}`,
+    email: `user${i + 1}@email.com`,
     status: statuses[Math.floor(Math.random() * statuses.length)],
     company: companies[Math.floor(Math.random() * companies.length)],
     source: sources[Math.floor(Math.random() * sources.length)],
@@ -110,7 +158,7 @@ const createColumns = () => {
       header: "Lead",
       cell: (info) => {
         const firstName = info.getValue();
-        const initials = getInitials(firstName," ");
+        const initials = getInitials(firstName, " ");
         return (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-600">
@@ -118,7 +166,10 @@ const createColumns = () => {
             </div>
             <div>
               <div className="font-medium text-sm">{firstName}</div>
-              <div className="text-xs text-gray-500">{info.row.original.email || `${firstName.toLowerCase()}@email.com`}</div>
+              <div className="text-xs text-gray-500">
+                {info.row.original.email ||
+                  `${firstName.toLowerCase()}@email.com`}
+              </div>
             </div>
           </div>
         );
@@ -198,11 +249,22 @@ const createColumns = () => {
       id: "actions",
       header: "Actions",
       cell: () => (
-        <button className="text-gray-400 hover:text-gray-600 cursor-pointer"
-        onClick={(e)=> e.stopPropagation()}
+        <button
+          className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+            />
           </svg>
         </button>
       ),
@@ -211,21 +273,23 @@ const createColumns = () => {
 };
 
 // --- Main Leads Component ---
-const Leads: React.FC = () => { 
-   
+const Leads: React.FC = () => {
   const [data, setData] = useState<Person[]>(generateDummyData);
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSort, setActiveSort] = useState("newest");
   const [isLeadInfoOpen, setIsLeadInfoOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Person>();
-  const [isAddLeadOpen, setIsAddLeadOpen]= useState(false);
+  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
 
   // Filter tabs with counts
   const filterTabs = useMemo(() => {
-    const counts = data.reduce((acc, item) => {
-      acc[item.status] = (acc[item.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = data.reduce(
+      (acc, item) => {
+        acc[item.status] = (acc[item.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     return [
       { label: "All Leads", value: "all", count: data.length },
@@ -237,16 +301,34 @@ const Leads: React.FC = () => {
     ];
   }, [data]);
 
-// Handler for status change
-    const handleStatusChange = (row: Person, newStatus: string) => {
-    setData(prev =>
-      prev.map(item =>
-        item.id === row.id ? { ...item, status: newStatus as Person['status'] } : item
-      )
+  // Handler for status change
+  const handleStatusChange = (row: Person, newStatus: string) => {
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === row.id
+          ? { ...item, status: newStatus as Person["status"] }
+          : item,
+      ),
     );
   };
 
-
+  // Add a new Lead
+  const onAddLead = (newLead: LeadFormData) => {
+    const newLeadWithId: Person = {
+      id: `user-${Date.now()}`, // generate a unique id
+      firstName: newLead.firstName,
+      lastName: newLead.lastName,
+      phone: newLead.phoneNo,
+      address: newLead.address,
+      email: newLead.email, 
+      company: newLead.company,
+      status: 'new',
+      source: newLead.leadSource,
+      owner: newLead.owner,
+      created: formatDateToMMDDYYYY(new Date()), // format the current date
+    }
+    setData((prev) => [newLeadWithId, ...prev]);
+  }
   // View options
   const viewOptions = [
     { label: "Table", value: "table", icon: <TableIcon className="w-4 h-4" /> },
@@ -254,11 +336,11 @@ const Leads: React.FC = () => {
   ];
 
   const statusOptions = [
-    { value: 'new', label: 'New', color: 'bg-blue-500' },
-    { value: 'contacted', label: 'Contacted', color: 'bg-purple-500' },
-    { value: 'qualified', label: 'Qualified', color: 'bg-indigo-500' },
-    { value: 'converted', label: 'Converted', color: 'bg-green-500' },
-    { value: 'lost', label: 'Lost', color: 'bg-red-500' },
+    { value: "new", label: "New", color: "bg-blue-500" },
+    { value: "contacted", label: "Contacted", color: "bg-purple-500" },
+    { value: "qualified", label: "Qualified", color: "bg-indigo-500" },
+    { value: "converted", label: "Converted", color: "bg-green-500" },
+    { value: "lost", label: "Lost", color: "bg-red-500" },
   ];
 
   // Filter data based on active filter
@@ -268,54 +350,84 @@ const Leads: React.FC = () => {
   }, [data, activeFilter]);
 
   // Sort data based on active sort
-const sortedData = useMemo(() => {
-  const sorted = [...filteredData];
+  const sortedData = useMemo(() => {
+    const sorted = [...filteredData];
 
-  switch (activeSort) {
-    case 'newest':
-      // Sort by created date (assumes format like "2d ago", "5h ago", etc.)
-      // We'll parse the number before 'd' or 'h' and convert to days/hours for comparison
-      return sorted.sort((a, b) => {
-        const getDays = (str: string) => {
-          const match = str.match(/(\d+)([dh])/);
-          if (!match) return 0;
-          const num = parseInt(match[1]);
-          const unit = match[2];
-          return unit === 'd' ? num : num / 24; // convert hours to days
-        };
-        return getDays(b.created) - getDays(a.created);
-      });
+    switch (activeSort) {
+      case "newest":
+        // Sort by created date (assumes format like "2d ago", "5h ago", etc.)
+        // We'll parse the number before 'd' or 'h' and convert to days/hours for comparison
+        return sorted.sort((a, b) => {
+          const getDays = (str: string) => {
+            const match = str.match(/(\d+)([dh])/);
+            if (!match) return 0;
+            const num = parseInt(match[1]);
+            const unit = match[2];
+            return unit === "d" ? num : num / 24; // convert hours to days
+          };
+          return getDays(b.created) - getDays(a.created);
+        });
 
-    case 'oldest':
-      return sorted.sort((a, b) => {
-        const getDays = (str: string) => {
-          const match = str.match(/(\d+)([dh])/);
-          if (!match) return 0;
-          const num = parseInt(match[1]);
-          const unit = match[2];
-          return unit === 'd' ? num : num / 24;
-        };
-        return getDays(a.created) - getDays(b.created);
-      });
+      case "oldest":
+        return sorted.sort((a, b) => {
+          const getDays = (str: string) => {
+            const match = str.match(/(\d+)([dh])/);
+            if (!match) return 0;
+            const num = parseInt(match[1]);
+            const unit = match[2];
+            return unit === "d" ? num : num / 24;
+          };
+          return getDays(a.created) - getDays(b.created);
+        });
 
-    case 'az':
-      return sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
+      case "az":
+        return sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
-    case 'za':
-      return sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
+      case "za":
+        return sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
 
-    default:
-      return sorted;
-  }
-}, [filteredData, activeSort]);
+      default:
+        return sorted;
+    }
+  }, [filteredData, activeSort]);
 
   // Lead cards data
   const leadCards = [
-    { title: "Total Leads", value: 128, icon: <UserRound />, change: "+12%", changeText: "vs last month" },
-    { title: "New Leads", value: 32, icon: <Plus />, change: "+8%", changeText: "vs last month" },
-    { title: "Contacted", value: 56, icon: <UserRound />, change: "+5%", changeText: "vs last month" },
-    { title: "Qualified", value: 18, icon: <Star />, change: "+20%", changeText: "vs last month" },
-    { title: "Converted", value: 22, icon: <Target />, change: "+10%", changeText: "vs last month" },
+    {
+      title: "Total Leads",
+      value: 128,
+      icon: <UserRound />,
+      change: "+12%",
+      changeText: "vs last month",
+    },
+    {
+      title: "New Leads",
+      value: 32,
+      icon: <Plus />,
+      change: "+8%",
+      changeText: "vs last month",
+    },
+    {
+      title: "Contacted",
+      value: 56,
+      icon: <UserRound />,
+      change: "+5%",
+      changeText: "vs last month",
+    },
+    {
+      title: "Qualified",
+      value: 18,
+      icon: <Star />,
+      change: "+20%",
+      changeText: "vs last month",
+    },
+    {
+      title: "Converted",
+      value: 22,
+      icon: <Target />,
+      change: "+10%",
+      changeText: "vs last month",
+    },
   ];
 
   // Bulk actions
@@ -347,14 +459,12 @@ const sortedData = useMemo(() => {
   const handleRowClick = (row: Person) => {
     setIsLeadInfoOpen(true);
     setSelectedLead(row);
-    console.log(isLeadInfoOpen)
+    console.log(isLeadInfoOpen);
   };
 
-  const handleAddLead=()=>{
+  const handleAddLead = () => {
     setIsAddLeadOpen(true);
-  }
-
-  console.log(filteredData, 'filter')
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -367,10 +477,7 @@ const sortedData = useMemo(() => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button
-          variant="outline"
-          onClick={handleAddLead}
-          >
+          <Button variant="outline" onClick={handleAddLead}>
             <PlusIcon className="w-4 h-4" />
             Add Lead
           </Button>
@@ -384,22 +491,32 @@ const sortedData = useMemo(() => {
       {/* Lead Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {leadCards.map((card, index) => (
-          <div
-            className="bg-white border-2 rounded-lg p-4 hover:shadow-md transition-shadow"
+          <Card
             key={index}
+            className="border-2 rounded-lg p-4 hover:shadow-md transition-shadow"
           >
-            <div className="flex flex-col">
-              <div className="flex justify-between items-start">
-                <span className="text-sm text-gray-500">{card.title}</span>
-                <div className="text-gray-400">{card.icon}</div>
+            <CardHeader className="flex flex-row items-center justify-between p-0">
+              <CardTitle className="text-sm text-muted-foreground font-medium">
+                {card.title}
+              </CardTitle>
+              <div className="text-muted-foreground">{card.icon}</div>
+            </CardHeader>
+
+            <CardContent className="p-0 mt-2">
+              <p className="text-2xl font-bold">{card.value}</p>
+            </CardContent>
+
+            <CardFooter className="p-0 mt-1">
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-green-600 font-medium">
+                  {card.change}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {card.changeText}
+                </span>
               </div>
-              <p className="text-2xl font-bold mt-2">{card.value}</p>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-xs text-green-600 font-medium">{card.change}</span>
-                <span className="text-xs text-gray-500">{card.changeText}</span>
-              </div>
-            </div>
-          </div>
+            </CardFooter>
+          </Card>
         ))}
       </div>
 
@@ -434,8 +551,9 @@ const sortedData = useMemo(() => {
         leadData={selectedLead}
       />
       <AddLeadModal
-      isAddLeadOpen={isAddLeadOpen}
-      setisAddLeadOpen={setIsAddLeadOpen}
+        isAddLeadOpen={isAddLeadOpen}
+        setisAddLeadOpen={setIsAddLeadOpen}
+        onAddLead={onAddLead}
       />
     </div>
   );

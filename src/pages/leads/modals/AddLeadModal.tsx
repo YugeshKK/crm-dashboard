@@ -99,11 +99,13 @@ export type LeadFormData = z.infer<typeof leadSchema>;
 interface AddLeadModalProps {
   isAddLeadOpen: boolean;
   setisAddLeadOpen: (open: boolean) => void;
+  onAddLead: (newLead: LeadFormData) => void;
 }
 
 export function AddLeadModal({
   isAddLeadOpen,
   setisAddLeadOpen,
+  onAddLead,
 }: AddLeadModalProps) {
   const {
     control,
@@ -128,7 +130,7 @@ export function AddLeadModal({
   });
 
   const handleFormSubmit = (data: LeadFormData) => {
-    console.log(data);
+    onAddLead(data);
     setisAddLeadOpen(false);
   };
 
@@ -428,11 +430,12 @@ export function AddLeadModal({
           </div>
 
           {/* Sticky footer */}
-          <DialogFooter className="border-t bg-gray-50 sticky bottom-0 p-4">
+          <DialogFooter className="border-t  sticky bottom-0 p-4">
             <div className="flex gap-3 pr-2">
               <Button
                 variant="outline"
                 type="button"
+                style={{ backgroundColor: "var(--background)" }}
                 onClick={() => {
                   setisAddLeadOpen(false);
                   reset();

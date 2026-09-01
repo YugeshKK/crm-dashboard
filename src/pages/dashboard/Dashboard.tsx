@@ -158,10 +158,9 @@ const Dashboard = (props: Props) => {
                 return (
                   <div
                     key={index}
-                    className={`w-3xs border rounded p-2 cursor-pointer flex flex-row gap-3 items-center transition ${
-                      isSelected
-                        ? "border-purple-500 bg-purple-50 shadow-sm"
-                        : "hover:bg-gray-100"
+                    style={{ borderColor: "var(--border)" }}
+                    className={`w-3xs border rounded p-2 cursor-pointer flex flex-row gap-3 items-center  transition hover:shadow-lg ${
+                      isSelected ? "bg-purple-50 text-black" : 'bg-[var(--background)]'
                     }`}
                     onClick={() => toggleWidgetSelection(widget.id)}
                   >
@@ -196,7 +195,8 @@ const Dashboard = (props: Props) => {
               onClick={handleAddSelectedWidgets}
               disabled={selectedWidgetIds.length === 0}
               style={{
-                background: "#941bafd0",
+                background: "var(--background)",
+                color: "var(--text-color)",
               }}
             >
               Add Widget

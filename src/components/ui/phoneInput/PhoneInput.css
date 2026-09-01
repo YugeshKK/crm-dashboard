@@ -5,10 +5,13 @@
   width: 100% !important;
   height: 32px !important;
   border-radius: 0.5rem !important; /* matches shadcn */
-  border: 1px solid #d1d5db !important; /* gray-300 */
+  border: 1px solid var(--border) !important;
+  border-color: var(--border) !important;
   padding-left: 48px !important;
   font-size: 0.875rem !important;
   transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: var(--transparent) !important;
+  color: var(--text) !important;
 }
 
 /* Focus state */
@@ -25,9 +28,6 @@
   background: transparent !important;
 }
 
-.react-tel-input .flag-dropdown.open {
-  background: #f3f4f6 !important;
-}
 
 /* Selected flag + country code */
 .react-tel-input .selected-flag {
@@ -49,9 +49,14 @@
   overflow-y: auto !important;
   border-radius: 0.5rem !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-  background: white !important;
-  border: 1px solid #e5e7eb !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
   margin-top: 4px !important;
+}
+
+.react-tel-input .country-list {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--border) var(--background) !important;
 }
 
 /* Country list items */
@@ -66,18 +71,19 @@
 }
 
 .react-tel-input .country-list .country:hover {
-  background: #f3f4f6 !important;
+  background: var(--input) !important;
 }
 .react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus {
   background-color: transparent !important;
 }
 
 .react-tel-input .country-list .country.highlight {
-  background: #eff6ff !important; /* blue-50 */
+  background: var(--chart-5) !important;
 }
 
 /* Search input inside dropdown */
 .react-tel-input .country-list .search {
+  background: var(--background) !important;
   border-bottom: 1px solid #e5e7eb !important;
   margin-bottom: 4px !important;
 }

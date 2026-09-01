@@ -8,7 +8,7 @@ type Props = {};
 
 const MainLayout = (props: Props) => {
   return (
-    <div className="grid min-h-screen grid-cols-[auto_1fr] gap">
+    <div className="grid min-h-screen grid-cols-[auto_1fr] gap" style={{ backgroundColor: "var(--background)" }}>
       <Sidebar />
       <div className="flex min-h-screen flex-col min-w-0">
         <Header />
