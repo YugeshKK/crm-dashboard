@@ -9,11 +9,12 @@ const PhoneInput = (PhoneInputBase as any).default || PhoneInputBase;
 interface CustomPhoneInputProps {
   value: string;
   onChange: (value: string) => void;
+  error?: string;
 }
 
-const CustomPhoneInput: React.FC<CustomPhoneInputProps> = ({ value, onChange }) => {
+const CustomPhoneInput: React.FC<CustomPhoneInputProps> = ({ value, onChange, error }) => {
   return (
-    <div>
+    <div className="w-full min-w-0">
       <PhoneInput
         country="in"
         value={value}
@@ -35,6 +36,7 @@ const CustomPhoneInput: React.FC<CustomPhoneInputProps> = ({ value, onChange }) 
           borderRadius: '0.5rem',
         }}
       />
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 };

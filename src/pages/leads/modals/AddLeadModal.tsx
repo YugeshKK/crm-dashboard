@@ -152,7 +152,7 @@ export function AddLeadModal({
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           {/* Scrollable form area */}
-          <div className="px-6 max-h-[60vh] overflow-y-auto">
+          <div className="px-6 max-h-[60vh] overflow-y-auto scrollbar-none">
             {/* Contact Information */}
             <div className="space-y-4 py-4">
               <h3 className="text-sm font-medium text-gray-700 uppercase tracking-wider col-span-2">

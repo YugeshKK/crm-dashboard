@@ -9,6 +9,7 @@ import Practice from "../pages/practice/Practice";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "../pages/login/Login";
 import AuthLayout from "../layouts/AuthLayout";
+import ProductDetails from "@/pages/productDetails/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -18,8 +19,10 @@ const AppRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="leads" element={<Leads />} />
-        <Route path="customers" element={<Customers />} />        
-        <Route path="practice" element={<Practice />} />
+        <Route path="customers" element={<Customers />} /> 
+        <Route path="products" element={<Products />} /> 
+        <Route path="products/:productId" element={<ProductDetails />} />      
+        <Route path="practice" element={<Practice />} />   
       </Route>
 
       //Auth Layout
@@ -28,7 +31,7 @@ const AppRoutes = () => {
       </Route>
 
       <Route element={<ProtectedRoutes />}>
-        <Route path="products" element={<Products />} />
+     
 
       </Route>
     </Routes>

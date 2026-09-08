@@ -45,6 +45,8 @@
 
 /* Dropdown panel */
 .react-tel-input .country-list {
+  max-width: fit-content !important;
+  min-width: 250px !important;
   max-height: 200px !important;
   overflow-y: auto !important;
   border-radius: 0.5rem !important;
@@ -78,7 +80,7 @@
 }
 
 .react-tel-input .country-list .country.highlight {
-  background: var(--chart-5) !important;
+  background: var(--chart-2) !important;
 }
 
 /* Search input inside dropdown */

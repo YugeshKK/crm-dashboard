@@ -12,7 +12,7 @@ const Header = (props: Props) => {
   }
 
   return (
-    <div className="flex items-center justify-around gap-3 p-3 border-b border-border sticlky top-0 z-10" style={{ backgroundColor: "var(--background)" }}>
+    <div className="flex items-center justify-around gap-3 p-3 border-b border-border sticky top-0 z-10" style={{ backgroundColor: "var(--background)" }}>
       <div className={styles.searchInpCont}>
         <input type="text" placeholder='Search' className={styles.searchInp} />
       </div>
