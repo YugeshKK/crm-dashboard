@@ -53,6 +53,24 @@ body {
   margin: 0;
 }
 
+.app-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--background);
+}
+
+.app-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-scroll::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.app-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 999px;
+}
+
 .active {
   color: green;
 }

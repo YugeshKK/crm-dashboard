@@ -8,14 +8,14 @@ type Props = {};
 
 const MainLayout = (props: Props) => {
   return (
-    <div className="grid min-h-screen grid-cols-[auto_1fr] gap" style={{ backgroundColor: "var(--background)" }}>
+    <div className="grid h-screen overflow-hidden grid-cols-[auto_1fr] gap" style={{ backgroundColor: "var(--background)" }}>
       <Sidebar />
-      <div className="flex min-h-screen flex-col min-w-0">
+      <div className="flex h-screen min-h-0 flex-col min-w-0">
         <Header />
-        <main className="flex flex-col min-w-0 flex-1 gap-3 p-3">
+        <main className="app-scroll flex min-h-0 flex-1 flex-col min-w-0 gap-3 overflow-y-auto pl-3 pr-3">
           <Outlet />
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );
