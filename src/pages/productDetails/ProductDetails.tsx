@@ -12,7 +12,11 @@ import {
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ProductOverview from "./productsDetailsTabs/ProductOverview";
 import { useEffect, useState } from "react";
-import ProductInventory from "./productsDetailsTabs/ProductInventory";
+import ProductInventory from "./productsDetailsTabs/inventory/ProductInventory";
+import SalesPerformance from "./productsDetailsTabs/SalesPerformance";
+import ProductSuppliers from "./productsDetailsTabs/ProductSuppliers";
+import ProductBuyers from "./productsDetailsTabs/ProductBuyers";
+import ProductActivity from "./productsDetailsTabs/ProductActivity";
 
 export interface ProductDetailsProps {}
 
@@ -35,10 +39,11 @@ export function ProductDetails(props: ProductDetailsProps) {
   const { productId } = useParams<{ productId: string }>();
   return (
     <>
-      <div className="sticky top-0 z-10 flex w-[calc(100%+1.5rem)]  flex-row justify-between px-3 py-2"
-      style={{
-        background:"var(--background)"
-      }}
+      <div
+        className="sticky top-0 z-10 flex w-[calc(100%+1.5rem)]  flex-row justify-between px-3 py-2"
+        style={{
+          background: "var(--background)",
+        }}
       >
         <div className="flex flex-row gap-2 items-center">
           <Button
@@ -175,19 +180,38 @@ export function ProductDetails(props: ProductDetailsProps) {
             <GitGraphIcon />
             Sales and performance
           </Button>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className={`flex items-center gap-2 ${activeTab === "suppliers" ? "border-green-200 bg-green-100 text-green-700 hover:bg-green-100" : ""}`}
+            onClick={() => handleTabChange("suppliers")}
+          >
             <Container />
             Suppliers
           </Button>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className={`flex items-center gap-2 ${activeTab === "buyers" ? "border-green-200 bg-green-100 text-green-700 hover:bg-green-100" : ""}`}
+            onClick={() => handleTabChange("buyers")}
+          >
             <ShoppingCart />
             Buyers
+          </Button>
+          <Button
+            variant="outline"
+            className={`flex items-center gap-2 ${activeTab === "activity" ? "border-green-200 bg-green-100 text-green-700 hover:bg-green-100" : ""}`}
+            onClick={() => handleTabChange("activity")}
+          >
+            <ShoppingCart />
+            Activity
           </Button>
         </div>
 
         {activeTab === "overview" && <ProductOverview />}
-        {activeTab === "inventory" && <ProductInventory/>}
-        {activeTab === "sp" && <div>Sales and performance </div>}
+        {activeTab === "inventory" && <ProductInventory />}
+        {activeTab === "sp" && <SalesPerformance />}
+        {activeTab === "suppliers" && <ProductSuppliers />}
+        {activeTab === "buyers" && <ProductBuyers />}
+        {activeTab === "activity" && <ProductActivity />}
       </div>
     </>
   );

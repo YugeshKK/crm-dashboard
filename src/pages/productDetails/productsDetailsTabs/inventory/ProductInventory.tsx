@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { TrendingUp, TrendingDown, ArrowRight, AlertTriangle, ShoppingCart } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import AdjustStockSheet from "./AdjustStock";
 
 // ============================================================
 // DUMMY DATA
@@ -173,10 +174,23 @@ const Sparkline = () => {
 
 const ProductInventory: React.FC = () => {
   const totalUnits = stockStatusData.reduce((s, d) => s + d.value, 0);
+  const [adjustModalOpen, setIsAdjustModalOpen]= useState(false);
+
+
+  const handleAdjustModalClose=()=>{
+    setIsAdjustModalOpen(prev=> !prev);
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4">
       {/* ============ TOP ROW ============ */}
+      <div>
+        <Button variant='outline'
+        onClick={()=> handleAdjustModalClose()}
+        >
+          Adjust Stock
+        </Button>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* --- Inventory Summary --- */}
         <Card className="border rounded-lg">
@@ -422,6 +436,11 @@ const ProductInventory: React.FC = () => {
           </Card>
         ))}
       </div>
+
+      <AdjustStockSheet
+        open={adjustModalOpen}
+        onOpenChange={handleAdjustModalClose}
+      />
     </div>
   );
 };
