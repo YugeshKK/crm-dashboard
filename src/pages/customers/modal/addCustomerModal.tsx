@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import CustomPhoneInput from "@/components/ui/phoneInput/CustomPhoneInput";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import "react-phone-number-input/style.css";
 
 // Zod schema for customer
 const customerSchema = z.object({

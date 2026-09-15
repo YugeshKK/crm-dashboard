@@ -330,6 +330,7 @@ export function DataTable<TData extends Record<string, any>>({
                 style={
                   {borderColor: "var(--border)"}
                 }
+                className="hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 {headerGroup.headers.map((header) => (
                   <th

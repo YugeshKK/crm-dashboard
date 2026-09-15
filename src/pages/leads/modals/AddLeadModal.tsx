@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/select";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import "react-phone-number-input/style.css";
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import CustomPhoneInput from "@/components/ui/phoneInput/CustomPhoneInput";
 

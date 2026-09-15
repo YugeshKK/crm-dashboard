@@ -5,11 +5,11 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Leads from "../pages/leads/Leads";
 import Customers from "../pages/customers/Customers";
 import Products from "../pages/products/Products";
-import Practice from "../pages/practice/Practice";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "../pages/login/Login";
 import AuthLayout from "../layouts/AuthLayout";
 import ProductDetails from "@/pages/productDetails/ProductDetails";
+import Orders from "../pages/orders/Orders";
 
 const AppRoutes = () => {
   return (
@@ -22,7 +22,7 @@ const AppRoutes = () => {
         <Route path="customers" element={<Customers />} /> 
         <Route path="products" element={<Products />} /> 
         <Route path="products/:productId" element={<ProductDetails />} />      
-        <Route path="practice" element={<Practice />} />   
+        <Route path="orders" element={<Orders />} />   
       </Route>
 
       //Auth Layout

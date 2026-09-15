@@ -3,6 +3,7 @@ import {
   Container,
   GitGraphIcon,
   MoveLeft,
+  NotebookPen,
   PencilIcon,
   Plus,
   ShelvingUnit,
@@ -14,15 +15,21 @@ import ProductOverview from "./productsDetailsTabs/ProductOverview";
 import { useEffect, useState } from "react";
 import ProductInventory from "./productsDetailsTabs/inventory/ProductInventory";
 import SalesPerformance from "./productsDetailsTabs/SalesPerformance";
-import ProductSuppliers from "./productsDetailsTabs/ProductSuppliers";
+import ProductSuppliers from "./productsDetailsTabs/ProductBOM";
 import ProductBuyers from "./productsDetailsTabs/ProductBuyers";
 import ProductActivity from "./productsDetailsTabs/ProductActivity";
+import EditProductModal from "./productsDetailsTabs/modal/EditProductModal";
+import AdjustStockSheet from "./productsDetailsTabs/inventory/AdjustStock";
 
 export interface ProductDetailsProps {}
 
 export function ProductDetails(props: ProductDetailsProps) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [editModalOpen, setEditModalOpen]= useState(false);
+  const [addStockOpen, setIsAddStockOpen] = useState(false);
+
+
   const [activeTab, setActiveTab] = useState<string>(
     searchParams.get("tab") || "overview",
   );
@@ -31,6 +38,15 @@ export function ProductDetails(props: ProductDetailsProps) {
     setSearchParams({ tab });
     setActiveTab(tab);
   };
+
+  const handleEditProduct=()=>{
+    console.log('clicked')
+    setEditModalOpen(prev=> !prev);
+  }
+
+  const openAddStock=()=>{
+    setIsAddStockOpen(prev=> !prev);
+  }
 
   useEffect(() => {
     setSearchParams({ activeTab });
@@ -57,11 +73,15 @@ export function ProductDetails(props: ProductDetailsProps) {
           <p>Solar sales panel 550W</p>
         </div>
         <div className="flex flex-row gap-2">
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex items-center gap-2"
+          onClick={handleEditProduct}
+          >
             <PencilIcon />
             Edit Product
           </Button>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex items-center gap-2"
+           onClick={openAddStock}
+          >
             <Plus />
             Add Stock
           </Button>
@@ -186,7 +206,7 @@ export function ProductDetails(props: ProductDetailsProps) {
             onClick={() => handleTabChange("suppliers")}
           >
             <Container />
-            Suppliers
+            BOM and suppliers
           </Button>
           <Button
             variant="outline"
@@ -201,7 +221,7 @@ export function ProductDetails(props: ProductDetailsProps) {
             className={`flex items-center gap-2 ${activeTab === "activity" ? "border-green-200 bg-green-100 text-green-700 hover:bg-green-100" : ""}`}
             onClick={() => handleTabChange("activity")}
           >
-            <ShoppingCart />
+            <NotebookPen />
             Activity
           </Button>
         </div>
@@ -212,6 +232,15 @@ export function ProductDetails(props: ProductDetailsProps) {
         {activeTab === "suppliers" && <ProductSuppliers />}
         {activeTab === "buyers" && <ProductBuyers />}
         {activeTab === "activity" && <ProductActivity />}
+
+        <EditProductModal
+        open={editModalOpen}
+        onOpenChange={handleEditProduct}
+        />
+        <AdjustStockSheet
+        open={addStockOpen}
+        onOpenChange={setIsAddStockOpen}
+        />
       </div>
     </>
   );

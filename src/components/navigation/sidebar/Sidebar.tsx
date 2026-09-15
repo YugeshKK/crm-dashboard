@@ -43,10 +43,10 @@ const Sidebar = (props: Props) => {
         Products
       </NavLink>
       <NavLink
-        to="/practice"
+        to="/orders"
         className={({ isActive }) => (isActive ? "active" : "")}
       >
-        Practice
+        Orders
       </NavLink>    
 
     </nav>
