@@ -80,7 +80,7 @@ export type DataTableProps<TData> = {
   activeView?: string;
   onViewChange?: (view: string) => void;
   onStatusChange?: (row: TData, newStatus: string) => void;
-  statusOptions: Record<string, string>[];
+  statusOptions?: Record<string, string>[];
   statusKey?: string;
 };
 
@@ -139,7 +139,7 @@ export function DataTable<TData extends Record<string, any>>({
   activeView = "",
   onViewChange,
   onStatusChange,
-  statusOptions,
+  statusOptions = [],
   statusKey = "status",
 }: DataTableProps<TData>) {
   // State
