@@ -10,6 +10,7 @@ import Login from "../pages/login/Login";
 import AuthLayout from "../layouts/AuthLayout";
 import ProductDetails from "@/pages/productDetails/ProductDetails";
 import Orders from "../pages/orders/Orders";
+import Invoice from "@/pages/invoice/Invoice";
 
 const AppRoutes = () => {
   return (
@@ -22,7 +23,8 @@ const AppRoutes = () => {
         <Route path="customers" element={<Customers />} /> 
         <Route path="products" element={<Products />} /> 
         <Route path="products/:productId" element={<ProductDetails />} />      
-        <Route path="orders" element={<Orders />} />   
+        <Route path="orders" element={<Orders />} />  
+        <Route path="invoice" element={<Invoice/>}/> 
       </Route>
 
       //Auth Layout

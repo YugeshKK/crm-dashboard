@@ -1,57 +1,59 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./side.module.scss";
-import { Menu, X } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  FileText,
+  LayoutDashboard,
+  Menu,
+  Package,
+  ReceiptText,
+  ShoppingCart,
+  Users,
+  X,
+} from "lucide-react";
 
 type Props = {};
 
-const Sidebar = (props: Props) => {
-  const [collapse, setCollapsed]= useState(false);
+const navItems = [
+  { to: "/", label: "Dashboard", Icon: LayoutDashboard },
+  { to: "/leads", label: "Leads", Icon: BriefcaseBusiness },
+  { to: "/customers", label: "Customers", Icon: Users },
+  { to: "/products", label: "Products", Icon: Package },
+  { to: "/orders", label: "Orders", Icon: ShoppingCart },
+  { to: "/invoice", label: "Invoice", Icon: ReceiptText },
+];
 
-  const handleCollapse=()=>{
-    setCollapsed((prev)=> !prev);
-  }
+const Sidebar = (props: Props) => {
+  const [collapse, setCollapsed] = useState(false);
+
+  const handleCollapse = () => {
+    setCollapsed((prev) => !prev);
+  };
 
   const navClasses = `${styles.navCont} cursor-pointer ${collapse ? styles.collapsed : ""}`.trim();
 
   return (
-    <div className={navClasses}> 
+    <div className={navClasses}>
       <div className={collapse ? styles.collapse : styles.unCollapsed} onClick={handleCollapse}>
-       { collapse ?  <Menu /> : <X/>}
+        {collapse ? <Menu /> : <X />}
       </div>
 
-    <nav className={styles.navComp}>      
-      <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
-        Dashboard
-      </NavLink>
-      <NavLink
-        to="/leads"
-        className={({ isActive }) => (isActive ? "active" : "")}
-      >
-        Leads
-      </NavLink>
-      <NavLink
-        to="/customers"
-        className={({ isActive }) => (isActive ? "active" : "")}
-      >
-        Customers
-      </NavLink>
-      <NavLink
-        to="/products"
-        className={({ isActive }) => (isActive ? "active" : "")}
-      >
-        Products
-      </NavLink>
-      <NavLink
-        to="/orders"
-        className={({ isActive }) => (isActive ? "active" : "")}
-      >
-        Orders
-      </NavLink>    
-
-    </nav>
+      <nav className={styles.navComp}>
+        {navItems.map(({ to, label, Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              `${isActive ? "active" : ""} group flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium transition-colors hover:text-green-600`
+            }
+          >
+            <Icon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:-rotate-[10deg] group-hover:scale-110" />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
-  
   );
 };
 
