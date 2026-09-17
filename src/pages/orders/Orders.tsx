@@ -12,6 +12,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/table/DataTable";
+import OrderDetailsSheet , {OrderDetail} from "./modal/OrderDetailsModal";
+import CreateOrderModal from "./modal/CreateOrderModal";
 
 // ============================================================
 // TYPES
@@ -29,6 +31,67 @@ type Order = {
   status: string;
 };
 
+const buildOrderDetail = (order: Order): OrderDetail => {
+  const itemsCount = order.items;
+  const total = order.totalAmount;
+  // Reverse-calculate subtotal, tax, discount for demo purposes
+  const subtotal = Math.round(total / 1.18);
+  const tax = Math.round(subtotal * 0.18);
+  const discount = 5000;
+  const isPaid = order.paymentStatus === "paid";
+  const isProcessing = order.fulfillmentStatus === "processing";
+
+  return {
+    id: order.id,
+    orderId: order.orderId,
+    customer: order.customer,
+    customerEmail: `contact@${order.customer.toLowerCase().replace(/\s+/g, "")}.com`,
+    customerPhone: "+91 98765 43210",
+    orderDate: order.orderDate,
+    orderTime: "10:32 AM",
+    source:
+      order.source === "customer_portal"
+        ? "Customer Portal"
+        : order.source === "salesperson"
+        ? "Salesperson"
+        : order.source === "phone"
+        ? "Phone"
+        : "Email",
+    paymentStatus: order.paymentStatus,
+    fulfillmentStatus: order.fulfillmentStatus,
+    items: itemsCount,
+    subtotal,
+    discount,
+    tax,
+    totalAmount: total,
+    timeline: [
+      { label: "Order Placed", date: order.orderDate, time: "10:32 AM", state: "done" },
+      { label: "Order Confirmed", date: order.orderDate, time: "11:05 AM", state: "done" },
+      {
+        label: "Payment Received (50%)",
+        date: order.orderDate,
+        time: "11:20 AM",
+        value: `₹ ${(total * 0.5).toLocaleString("en-IN")}`,
+        state: "done",
+      },
+      {
+        label: "Inventory Reserved",
+        date: order.orderDate,
+        time: "11:25 AM",
+        value: `${itemsCount} items`,
+        state: "done",
+      },
+      {
+        label: "Processing",
+        date: order.orderDate,
+        time: "01:10 PM",
+        state: isProcessing ? "current" : "done",
+      },
+      { label: "Shipped", date: "", state: "pending" },
+      { label: "Delivered", date: "", state: "pending" },
+    ],
+  };
+};
 // ============================================================
 // DUMMY DATA
 // ============================================================
@@ -269,7 +332,8 @@ const Orders = () => {
   const [data] = useState<Order[]>(generateOrders);
   const [activeTab, setActiveTab] = useState("all");
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
-
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
   // ------------------- DERIVED DATA -------------------
   const metrics = useMemo(() => {
     const total = data.length;
@@ -340,6 +404,14 @@ const Orders = () => {
     return data.filter((o) => o.status === activeTab);
   }, [data, activeTab]);
 
+  const handleRowClick = (order: Order) => {
+    setSelectedOrder(buildOrderDetail(order));
+    setIsDetailsOpen(true);
+  };
+
+  const handleCreateModalOpen=()=>{
+    setIsCreateOrderOpen(prev=> !prev);
+  }
   // ------------------- HANDLERS -------------------
   // const handleCreateOrder = (formData: OrderFormData) => {
   //   console.log("New order:", formData);
@@ -357,7 +429,7 @@ const Orders = () => {
             Manage and track all customer orders
           </p>
         </div>
-        <Button onClick={() => setIsCreateOrderOpen(true)} className="gap-1.5">
+        <Button onClick={handleCreateModalOpen} className="gap-1.5">
           <Plus className="w-4 h-4" />
           Create Order
         </Button>
@@ -404,14 +476,20 @@ const Orders = () => {
         filterTabs={filterTabs}
         activeFilter={activeTab}
         onFilterChange={setActiveTab}
+        onRowClick={handleRowClick}
       />
 
       {/* Create Order Sheet */}
-      {/* <CreateOrderSheet
-        open={isCreateOrderOpen}
-        onOpenChange={setIsCreateOrderOpen}
-        onCreate={handleCreateOrder}
-      /> */}
+      <OrderDetailsSheet
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        order={selectedOrder}
+      />
+
+      <CreateOrderModal
+      open={isCreateOrderOpen}
+      onOpenChange={handleCreateModalOpen}
+      />
     </div>
   );
 };
