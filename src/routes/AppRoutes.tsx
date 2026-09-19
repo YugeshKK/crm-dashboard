@@ -11,6 +11,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import ProductDetails from "@/pages/productDetails/ProductDetails";
 import Orders from "../pages/orders/Orders";
 import Invoice from "@/pages/invoice/Invoice";
+import Payments from "@/pages/payments/Payments";
 
 const AppRoutes = () => {
   return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route path="products/:productId" element={<ProductDetails />} />      
         <Route path="orders" element={<Orders />} />  
         <Route path="invoice" element={<Invoice/>}/> 
+        <Route path="payments" element={<Payments />} />
       </Route>
 
       //Auth Layout
