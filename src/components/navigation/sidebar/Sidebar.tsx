@@ -11,7 +11,10 @@ import {
   ShoppingCart,
   Users,
   X,
+  Warehouse,
   IndianRupee,
+  ActivityIcon,
+  ChartPie,
 } from "lucide-react";
 
 type Props = {};
@@ -24,6 +27,9 @@ const navItems = [
   { to: "/orders", label: "Orders", Icon: ShoppingCart },
   { to: "/invoice", label: "Invoice", Icon: ReceiptText },
   { to: "/payments", label: "Payments", Icon: IndianRupee },
+  { to: "/inventory", label: "Inventory", Icon:Warehouse},
+  { to: "/activities", label: "Activity", Icon:ActivityIcon},
+  { to: "/reports", label: "Reports", Icon:ChartPie}
 ];
 
 const Sidebar = (props: Props) => {

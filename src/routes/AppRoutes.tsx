@@ -12,6 +12,9 @@ import ProductDetails from "@/pages/productDetails/ProductDetails";
 import Orders from "../pages/orders/Orders";
 import Invoice from "@/pages/invoice/Invoice";
 import Payments from "@/pages/payments/Payments";
+import Inventory from "@/pages/inventory/Inventory";
+import Activities from "@/pages/activities/Activities";
+import Reports from "@/pages/reports/Reports";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +30,9 @@ const AppRoutes = () => {
         <Route path="orders" element={<Orders />} />  
         <Route path="invoice" element={<Invoice/>}/> 
         <Route path="payments" element={<Payments />} />
+        <Route path="inventory" element={<Inventory/>}/>
+        <Route path="activities" element={<Activities/>}/>
+        <Route path="reports" element={<Reports/>}/>
       </Route>
 
       //Auth Layout
