@@ -418,7 +418,6 @@ const ViewToggle = ({
   onChange: (v: ViewMode) => void;
 }) => {
   const options: { value: ViewMode; label: string; icon: React.ElementType }[] = [
-    { value: "grid", label: "Grid", icon: LayoutGrid },
     { value: "kanban", label: "Board", icon: Columns },
     { value: "warehouse", label: "Warehouse", icon: Layers },
     { value: "table", label: "Table", icon: List },

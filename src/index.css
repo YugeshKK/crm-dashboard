@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,10 +46,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --main-theme: #D60A92;
 }
 
 body {
   margin: 0;
+  overflow:'hidden'
 }
 
 * {
@@ -95,7 +96,7 @@ body {
 }
 
 .active {
-  color: green;
+  color: var(--main-theme);
 }
 
 @theme inline {
