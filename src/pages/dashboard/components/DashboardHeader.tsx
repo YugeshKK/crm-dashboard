@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
@@ -10,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import AddLeadModal, { type LeadFormData } from "@/pages/leads/modals/AddLeadModal";
 export interface IAppProps {
   addWidget: () => void;
   isDialogOpen: boolean;
@@ -17,8 +19,11 @@ export interface IAppProps {
 }
 
 export default function DashboardHeader(props: IAppProps) {
-  const handleClick = () => {
-    console.log("Hello");
+  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+
+  const handleAddLead = (newLead: LeadFormData) => {
+    setIsAddLeadOpen(false);
+    console.log("Lead submitted", newLead);
   };
   const items = [
     { label: "Light 1", value: "light-1" },
@@ -57,12 +62,18 @@ export default function DashboardHeader(props: IAppProps) {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Button variant={"secondary"} onClick={handleClick}>
+          <Button variant={"secondary"} onClick={() => setIsAddLeadOpen(true)}>
             <Plus color="grey" />
             Add Lead
           </Button>
         </div>
       </div>
+
+      <AddLeadModal
+        isAddLeadOpen={isAddLeadOpen}
+        setisAddLeadOpen={setIsAddLeadOpen}
+        onAddLead={handleAddLead}
+      />
     </div>
   );
 }

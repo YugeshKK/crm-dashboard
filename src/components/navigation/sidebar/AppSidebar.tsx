@@ -16,6 +16,7 @@ import {
   type LucideIcon,
   PanelLeftOpen,
   PanelLeftClose,
+  MapPin,
 } from "lucide-react";
 import {
   Sidebar,
@@ -80,6 +81,12 @@ const navGroups: NavGroup[] = [
       { to: "/reports", label: "Reports", icon: ChartPie },
     ],
   },
+  {
+    label: "Locations",
+    items: [
+      { to: "/location", label: "Location", icon: MapPin },
+    ],
+  }
 ];
 
 const secondaryItems: NavItem[] = [

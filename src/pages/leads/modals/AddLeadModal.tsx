@@ -442,7 +442,7 @@ export function AddLeadModal({
               >
                 Cancel
               </Button>
-              <Button type="submit">Add Lead</Button>
+              <Button type="submit"  style={{background:'var(--main-theme)', color:'#ffff'}}>Add Lead</Button>
             </div>
           </DialogFooter>
         </form>

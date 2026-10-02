@@ -15,6 +15,7 @@ import Payments from "@/pages/payments/Payments";
 import Inventory from "@/pages/inventory/Inventory";
 import Activities from "@/pages/activities/Activities";
 import Reports from "@/pages/reports/Reports";
+import Locations from "@/pages/locations/Locations";
 
 const AppRoutes = () => {
   return (
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         <Route path="inventory" element={<Inventory/>}/>
         <Route path="activities" element={<Activities/>}/>
         <Route path="reports" element={<Reports/>}/>
+        <Route path="/location" element={<Locations/>}/>
       </Route>
 
       //Auth Layout

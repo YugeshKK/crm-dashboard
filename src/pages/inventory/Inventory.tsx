@@ -708,18 +708,16 @@ const Inventory = () => {
       <AdjustStockSheet
         open={isAdjustOpen}
         onOpenChange={setIsAdjustOpen}
-        productName={adjustProduct?.name}
-        sku={adjustProduct?.sku}
-        currentStock={
-          adjustProduct
-            ? {
-                total: adjustProduct.available + adjustProduct.reserved,
-                available: adjustProduct.available,
-                reserved: adjustProduct.reserved,
-                incoming: adjustProduct.onOrder,
-              }
-            : undefined
-        }
+         products={data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          sku: item.sku,
+          available: item.available,
+          reserved: item.reserved,
+          onOrder: item.onOrder,
+          category: item.category, 
+        }))}
+        preselectedProductId={adjustProduct?.id}
         onSave={handleSaveAdjustment}
       />
 
